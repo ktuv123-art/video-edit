@@ -1,0 +1,6 @@
+# torch는 GPU(CUDA 12.8)용으로 먼저 설치: install.bat 참고
+faster-whisper
+easyocr
+opencv-python-headless
+numpy
+gradio

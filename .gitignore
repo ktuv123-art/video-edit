@@ -1,0 +1,38 @@
+# 비밀 값
+.env
+.env.*
+!.env.example
+
+# 가상환경 / 캐시
+.venv/
+venv/
+__pycache__/
+*.pyc
+.cache/
+
+# 작업 산출물 (영상·대본 등 개인정보가 들어 있을 수 있음)
+work/
+output/
+*.mp4
+*.mov
+*.mkv
+*.avi
+*.webm
+*.wav
+*.mp3
+*.m4a
+
+# 모델 파일
+*.pt
+*.bin
+*.onnx
+*.safetensors
+
+# OS / 에디터
+Thumbs.db
+.DS_Store
+.vscode/
+.idea/
+
+# Claude Code 로컬 설정
+.claude/settings.local.json
