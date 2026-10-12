@@ -113,6 +113,28 @@ def style_metrics(width, height, cfg):
     return fs, max_chars
 
 
+def estimate_width(text, fs):
+    """폰트 없이 자막 한 줄의 가로 폭(px)을 보수적으로 추정."""
+    w = 0.0
+    for ch in text:
+        if ch == " ":
+            w += 0.35
+        elif ch.isascii():
+            w += 0.62
+        else:
+            w += 1.02
+    return w * fs
+
+
+def clamp_center(px, py, text_w, fs, width, height):
+    """자막 중심 (px, py)를 화면 안쪽으로 보정해서 글자가 잘리지 않게 한다."""
+    half_w = text_w / 2 + width * 0.02
+    px = width / 2 if half_w * 2 >= width else min(max(px, half_w), width - half_w)
+    half_h = fs * 0.75
+    py = min(max(py, half_h), height - half_h)
+    return px, py
+
+
 def write_ass(cues, path, width, height, cfg, font_name):
     fs, _ = style_metrics(width, height, cfg)
     outline = max(2, round(fs * 0.09))
@@ -135,5 +157,9 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
     rows = []
     for c in cues:
         t = c["text"].replace("\\", "＼").replace("{", "(").replace("}", ")").replace("\n", "\\N")
+        if cfg.sub_pos:   # 사용자가 지정한 위치: 글자 중심을 그 점에 맞춘다
+            px, py = clamp_center(cfg.sub_pos[0] * width, cfg.sub_pos[1] * height,
+                                  estimate_width(c["text"], fs), fs, width, height)
+            t = f"{{\\an5\\pos({px:.0f},{py:.0f})}}{t}"
         rows.append(f"Dialogue: 0,{_ts_ass(c['start'])},{_ts_ass(c['end'])},Default,,0,0,0,,{t}")
     path.write_text(head + "\n".join(rows) + "\n", encoding="utf-8-sig")

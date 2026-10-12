@@ -31,6 +31,7 @@ run_ui.bat                      # = .venv\Scripts\python.exe app.py
 | `subtitles.py` | 편집본 타임라인 기준 자막(SRT + 화면용 ASS), 음성 개인정보 `*` 마스킹 |
 | `pii.py` | 개인정보 정규식(전화·주민·카드·계좌·이메일·차량·주소·라벨값) |
 | `mosaic.py` | EasyOCR로 화면 개인정보 탐지, 프레임별 모자이크 렌더 |
+| `preview.py` | 웹 UI용 자막 위치 미리보기(대표 장면 추출 + 샘플 자막 그리기) |
 | `render.py` | 컷 + 자막 burn-in + 삐 처리를 ffmpeg filter_complex 한 번으로 렌더 |
 | `pipeline.py` | 전체 흐름 오케스트레이션과 리포트 작성 |
 
@@ -40,6 +41,8 @@ run_ui.bat                      # = .venv\Scripts\python.exe app.py
 
 - **이해를 해치지 않는 편집이 최우선**: 쉼을 전부 없애지 말고 `max_pause`(기본 0.4초) 이하는 호흡으로 남긴다. 컷 위치는 가장 조용한 지점에 맞춘다.
 - 자막 시간은 반드시 `TimeMap`으로 변환한 **편집본** 기준 시간을 쓴다. 원본 시간을 그대로 쓰지 않는다.
+- 자막 위치는 `Config.sub_pos`(화면 비율 x,y, 중심 기준)이고 `None`이면 아래 가운데. 지정되면 ASS에 `{\an5\pos(x,y)}`를 쓰고 `subtitles.clamp_center`로 화면 밖 잘림을 막는다. 미리보기(`preview.py`)도 같은 함수를 써서 결과와 일치시킨다.
+- Gradio UI 테스트 시 스크린샷이 어긋나 보일 수 있으니, 클릭 좌표는 JS로 요소의 실제 위치를 확인하고 정한다.
 - 개인정보는 **놓치는 쪽이 더 위험**하다. 모자이크는 의심되면 가리는 쪽으로 기울이고, 두 OCR 샘플 사이 프레임은 양쪽 박스를 모두 가린다.
 - 새 개인정보 패턴을 추가할 때는 `pii.find_pii`로 오탐 케이스(날짜, 가격, 버전 번호, 1588-xxxx 등)를 함께 확인한다.
 - ffmpeg 필터 그래프는 `filter.txt`로 넘기고 `cwd=workdir`에서 실행한다(경로 이스케이프 문제 회피). 자막 폰트는 `work/.../fonts`에 복사해서 쓴다.

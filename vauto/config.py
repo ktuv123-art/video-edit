@@ -27,6 +27,7 @@ class Config:
     font_file: str = ""                  # 비워두면 맑은 고딕 Bold 사용
     font_scale: float = 1.0
     sub_margin: float = 0.08             # 화면 아래 여백(높이 대비)
+    sub_pos: tuple = None                # 자막 중심 위치 (x, y) — 화면 비율 0~1. None = 아래 가운데
 
     # ── 개인정보 ───────────────────────────────────────────
     mosaic_text_pii: bool = True         # 화면 속 전화번호/주소 등 OCR 모자이크
