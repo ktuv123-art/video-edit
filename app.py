@@ -88,7 +88,7 @@ with gr.Blocks(title="영상 자동 편집") as demo:
     gr.Markdown("## 🎬 영상 자동 편집\n무음·필러(어, 음) 컷 → 컷마다 싱크 맞춘 자막 → 화면/음성 속 개인정보 모자이크·삐 처리")
     with gr.Row():
         with gr.Column(scale=1):
-            video = gr.Video(label="원본 영상 업로드", sources=["upload"])
+            video = gr.File(label="원본 영상 업로드", file_types=["video"], file_count="single", type="filepath")
             with gr.Accordion("컷 편집", open=True):
                 cut_silence = gr.Checkbox(True, label="무음 구간 제거")
                 cut_fillers = gr.Checkbox(True, label="필러워드 제거 (어, 음, 으음 …)")
